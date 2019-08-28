@@ -96,7 +96,7 @@ class Row(object):
 
     @property
     def unit(self):
-        return self._value
+        return self._unit
 
     @unit.setter
     def unit(self, value):
@@ -135,7 +135,7 @@ def process_dataframe(dataframe, year, month, tab, title, unit):
     return rowList
 
 def process_row(index, row, year, month, tab, title, unit):
-    print(index, [x for x in row])
+    # print(index, [x for x in row])
     rowList = []
 
     if year == 2019:
