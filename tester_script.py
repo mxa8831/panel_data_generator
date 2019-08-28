@@ -3,6 +3,18 @@ import function_input
 import function_file
 import pandas
 
+
+
+for aFile in function_general.list_file("input_file"):
+    print("Processing {}".format(aFile))
+    year, month = function_general.re_get_date(aFile)
+
+    title, unit, df1 = function_file.open_input_file(aFile, function_input.get_sheet_name(0))
+    print(title, unit)
+
+exit()
+
+
 # test file reader
 fileList = function_general.list_file("input_file")
 for aFile in fileList:
@@ -25,8 +37,12 @@ newDf = pandas.DataFrame([x.toList() for x in rowlist], columns=[
     'Sector',
     'Threshold1',
     'Threshold2',
-    'kW'
+    'Value',
+    'Unit',
+    'Tab',
+    'Title'
 ])
+
 print(newDf)
 
 # dataframe to list
