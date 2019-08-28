@@ -11,14 +11,18 @@ sheetNameList = [
 ]
 
 class Row(object):
-    def __init__(self, year, month, perfecture, sector, threshold1, threshold2, kw):
+    def __init__(self, year, month, perfecture, sector, threshold1, threshold2, value, unit, tab, title):
         self._year = year
         self._month = month
         self._perfecture = perfecture
         self._sector = sector
         self._threshold1 = threshold1
         self._threshold2 = threshold2
-        self._kw = kw
+        self._value = value
+        self._unit = unit
+        self._tab = tab
+        self._title = title
+
 
     def toList(self):
         return [
@@ -80,12 +84,36 @@ class Row(object):
         self._threshold2 = value
 
     @property
-    def kw(self):
-        return self._kw
+    def value(self):
+        return self._value
 
-    @kw.setter
-    def kw(self, value):
-        self._kw= value
+    @value.setter
+    def value(self, value):
+        self._value= value
+
+    @property
+    def unit(self):
+        return self._value
+
+    @unit.setter
+    def unit(self, value):
+        self._unit= value
+
+    @property
+    def tab(self):
+        return self._tab
+
+    @tab.setter
+    def tab(self, value):
+        self._tab= value
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
 
 
 
