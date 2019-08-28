@@ -10,7 +10,7 @@ for aFile in function_general.list_file("input_file"):
     print("Processing {}".format(aFile))
     year, month = function_general.re_get_date(aFile)
 
-    df1 = function_file.open_input_file(aFile, function_input.get_sheet_name(0))
+    title, unit, df1 = function_file.open_input_file(aFile, function_input.get_sheet_name(0))
 
     # todo: different processor for different tabs
     # df2 = function_file.open_input_file(aFile, function_input.get_sheet_name(1))
@@ -18,7 +18,7 @@ for aFile in function_general.list_file("input_file"):
     # df4 = function_file.open_input_file(aFile, function_input.get_sheet_name(3))
 
     if df1 is not None:
-        rowlist1 = function_input.process_dataframe(df1, year, month, function_input.get_sheet_name(0))
+        rowlist1 = function_input.process_dataframe(df1, year, month, function_input.get_sheet_name(0),  title, unit)
         finalData += [x.toList() for x in rowlist1]
     # if df2 is not None:
     #     rowlist2 = function_input.process_dataframe(df2, year, month, function_input.get_sheet_name(1))
@@ -37,6 +37,9 @@ newDf = pandas.DataFrame(finalData, columns=[
     'Sector',
     'Threshold1',
     'Threshold2',
-    'kW'
+    'Value',
+    'Unit',
+    'Tab',
+    'Title'
 ])
 newDf.to_excel("output_file/beta_{}.xlsx".format(str(datetime.datetime.now())), index=False)
