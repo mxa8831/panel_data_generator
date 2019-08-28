@@ -24,4 +24,7 @@ def open_output_file(filename, sheetName):
 def get_unit(datafarme):
     # （単位：件）
     aRow = datafarme.loc[0, :].tolist()
-    return aRow[-1]
+    if '件' in aRow[-1]:
+        return '件'
+    elif 'kW' in aRow[-1]:
+        return 'kW'
