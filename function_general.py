@@ -8,4 +8,4 @@ def re_get_date(filename):
     raise ValueError("The file name did not contain the pattern of year and month as YYYYMM. Example of working pattern: '201903'.")
 
 def list_file(pathname):
-    return glob.glob("{}/*.xls*".format(pathname))
+    return sorted(glob.glob("{}/*.xls*".format(pathname)))
