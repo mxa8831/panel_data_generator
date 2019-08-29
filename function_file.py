@@ -10,16 +10,16 @@ def open_excel(fileName, sheetName):
         return None
 
 
-def open_input_file(filename, sheetName, returnTitleandUnit = False):
+def open_input_file(filename, sheetName, returnTitle = False):
     dataframe = open_excel(filename,sheetName)
     if dataframe is not None:
-        if returnTitleandUnit:
+        unit = get_unit(dataframe)
+        if returnTitle:
             title = dataframe.columns[0]
-            unit = get_unit(dataframe)
             return title, unit, dataframe.loc[4:]
         else:
-            return dataframe.loc[4:]
-    return (None, None, None) if returnTitleandUnit else None
+            return unit, dataframe.loc[4:]
+    return (None, None, None) if returnTitle else (None, None)
 
 def open_output_file(filename, sheetName):
     return open_excel(filename,sheetName)
