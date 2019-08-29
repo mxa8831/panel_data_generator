@@ -1,9 +1,11 @@
 import function_general
 import function_input
+import function_output
 import function_file
 import pandas
 import datetime
 
+finalDataFrame = pandas.DataFrame([], columns=function_input.get_summary_header_name())
 finalData = []
 
 for aFile in function_general.list_file("input_file"):
@@ -28,17 +30,14 @@ for aFile in function_general.list_file("input_file"):
         rowlist4 = function_input.process_dataframe(df4, year, month, function_input.get_sheet_name(3), title, unit4)
         finalData += [x.toList() for x in rowlist4]
 
-print("Generate Output File (xlsx). Will take some time depending how large the data...")
-newDf = pandas.DataFrame(finalData, columns=[
-    'Year',
-    'Month',
-    'Prefecture',
-    'Sector',
-    'Threshold1',
-    'Threshold2',
-    'Value',
-    'Unit',
-    'Tab',
-    'Title'
-])
-newDf.to_excel("output_file/beta_{}.xlsx".format(str(datetime.datetime.now())), index=False)
+print("Generating Output File (xlsx). Will take some time depending how large the data is...")
+newDf = pandas.DataFrame(finalData, columns=function_output.get_summary_header_name())
+netDf = pandas.DataFrame([], columns=function_output.get_net_header_name())
+
+
+
+filename = "output_file/beta_{}.xlsx".format(str(datetime.datetime.now()).replace(":", "."))
+excelWriter = pandas.ExcelWriter(filename, engine='xlsxwriter')
+newDf.to_excel(excelWriter, index=False, sheet_name="Summary1")
+netDf.to_excel(excelWriter, index=False, sheet_name="net")
+excelWriter.save()
