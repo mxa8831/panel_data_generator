@@ -1,7 +1,7 @@
 import re
 import glob
 
-def re_get_date(filename):
+def regex_get_date(filename):
     result = re.search("A_pref(20\d\d)(\d\d)", filename)
     if result and len(result.groups()) == 2:
         return (result.group((1)), result.group((2)))
