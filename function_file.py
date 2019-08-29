@@ -24,9 +24,9 @@ def open_input_file(filename, sheetName, returnTitle = False):
 def open_output_file(filename, sheetName):
     return open_excel(filename,sheetName)
 
-def get_unit(datafarme):
-    # （単位：件）
-    aRow = datafarme.loc[0, :].tolist()
+def get_unit(dataframe):
+    # （単位：件） or （単位：kW）
+    aRow = dataframe.loc[0, :].tolist()
     if '件' in aRow[-1]:
         return '件'
     elif 'kW' in aRow[-1]:
