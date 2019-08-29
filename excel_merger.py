@@ -15,7 +15,7 @@ for aFile in function_general.list_file("input_file"):
     # todo: different processor for different tabs
     # df2 = function_file.open_input_file(aFile, function_input.get_sheet_name(1))
     # df3 = function_file.open_input_file(aFile, function_input.get_sheet_name(2))
-    # df4 = function_file.open_input_file(aFile, function_input.get_sheet_name(3))
+    junk, junk, df4 = function_file.open_input_file(aFile, function_input.get_sheet_name(3))
 
     if df1 is not None:
         rowlist1 = function_input.process_dataframe(df1, year, month, function_input.get_sheet_name(0),  title, unit)
@@ -26,9 +26,9 @@ for aFile in function_general.list_file("input_file"):
     # if df3 is not None:
     #     rowlist3 = function_input.process_dataframe(df3, year, month, function_input.get_sheet_name(2))
     #     finalData += [x.toList() for x in rowlist3]
-    # if df4 is not None:
-    #     rowlist4 = function_input.process_dataframe(df4, year, month, function_input.get_sheet_name(3))
-    #     finalData += [x.toList() for x in rowlist4]
+    if df4 is not None:
+        rowlist4 = function_input.process_dataframe(df4, year, month, function_input.get_sheet_name(3), title, unit)
+        finalData += [x.toList() for x in rowlist4]
 
 newDf = pandas.DataFrame(finalData, columns=[
     'Year',
