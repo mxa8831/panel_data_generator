@@ -19,7 +19,7 @@ def open_input_file(filename, sheetName, returnTitleandUnit = False):
             return title, unit, dataframe.loc[4:]
         else:
             return dataframe.loc[4:]
-    return (None, None, None)
+    return (None, None, None) if returnTitleandUnit else None
 
 def open_output_file(filename, sheetName):
     return open_excel(filename,sheetName)
