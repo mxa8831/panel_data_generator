@@ -1,4 +1,5 @@
-import function_general
+import function_output
+import pandas
 
 sheetNameList = [
     '表A①－１',
