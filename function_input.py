@@ -10,19 +10,6 @@ sheetNameList = [
     '表A④',
 ]
 
-headerNameList = [
-    'Year',
-    'Month',
-    'Prefecture',
-    'Sector',
-    'Threshold1',
-    'Threshold2',
-    'Value',
-    'Unit',
-    'Tab',
-    'Title'
-]
-
 class Row(object):
     def __init__(self, year, month, perfecture, sector, threshold1, threshold2, value, unit, tab, title):
         self._year = year
