@@ -26,6 +26,7 @@ netHeaderNameList = [
     'Title',
     'Net Value',
     'Net Unit',
+    'Abnormal'
 ]
 
 def get_summary_header_name():

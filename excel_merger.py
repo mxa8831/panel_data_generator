@@ -3,8 +3,9 @@ import function_input
 import function_output
 import function_file
 import pandas
+import datetime
 
-finalDataFrame = pandas.DataFrame([], columns=function_input.get_summary_header_name())
+finalDataFrame = pandas.DataFrame([], columns=function_output.get_summary_header_name())
 finalData = []
 
 for aFile in function_general.list_file("input_file"):
