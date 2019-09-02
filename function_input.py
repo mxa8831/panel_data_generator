@@ -11,7 +11,7 @@ sheetNameList = [
 ]
 
 class Row(object):
-    def __init__(self, year, month, perfecture, sector, threshold1, threshold2, value, unit, tab, title):
+    def __init__(self, year, month, perfecture, sector, threshold1, threshold2, value, unit, tab, title, difference = 'NA', abnormal = False):
         self._year = year
         self._month = month
         self._perfecture = perfecture
@@ -22,9 +22,11 @@ class Row(object):
         self._unit = unit
         self._tab = tab
         self._title = title
+        self._difference = difference
+        self._abnormal = abnormal
 
 
-    def toList(self):
+    def to_summary_list(self):
         return [
             self.year,
             self.month,
@@ -36,6 +38,21 @@ class Row(object):
             self.unit,
             self.tab,
             self.title
+        ]
+
+    def to_net_list(self):
+        return [
+            self.year,
+            self.month,
+            self.perfecture,
+            self.sector,
+            self.threshold1,
+            self.threshold2,
+            self.tab,
+            self.title,
+            self.difference,
+            self.unit,
+            ('Yes' if self.abnormal else 'No')
         ]
 
     @property
@@ -118,6 +135,21 @@ class Row(object):
     def title(self, value):
         self._title = value
 
+    @property
+    def difference(self):
+        return self._difference
+
+    @difference.setter
+    def difference(self, value):
+        self._difference = value
+
+    @property
+    def abnormal(self):
+        return self._abnormal
+
+    @abnormal.setter
+    def abnormal(self, value):
+        self._abnormal= value
 
 
 def get_sheet_name(index):
