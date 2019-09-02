@@ -30,7 +30,7 @@ print(year, month)
 df = function_file.open_input_file("input_file/A_pref201903.xlsx", function_input.get_sheet_name(0))
 rowlist = function_input.process_dataframe(df, year, month)
 
-newDf = pandas.DataFrame([x.toList() for x in rowlist], columns=[
+newDf = pandas.DataFrame([x.to_summary_list() for x in rowlist], columns=[
     'Year',
     'Month',
     'Prefecture',

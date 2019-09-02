@@ -19,16 +19,16 @@ for aFile in function_general.list_file("input_file"):
 
     if df1 is not None:
         rowlist1 = function_input.process_dataframe(df1, year, month, function_input.get_sheet_name(0),  title, unit1)
-        finalData += [x.toList() for x in rowlist1]
+        finalData += [x.to_summary_list() for x in rowlist1]
     if df2 is not None:
         rowlist2 = function_input.process_dataframe(df2, year, month, function_input.get_sheet_name(1), title, unit2)
-        finalData += [x.toList() for x in rowlist2]
+        finalData += [x.to_summary_list() for x in rowlist2]
     if df3 is not None:
         rowlist3 = function_input.process_dataframe(df3, year, month, function_input.get_sheet_name(2), title, unit3)
-        finalData += [x.toList() for x in rowlist3]
+        finalData += [x.to_summary_list() for x in rowlist3]
     if df4 is not None:
         rowlist4 = function_input.process_dataframe(df4, year, month, function_input.get_sheet_name(3), title, unit4)
-        finalData += [x.toList() for x in rowlist4]
+        finalData += [x.to_summary_list() for x in rowlist4]
 
 print("Generating Output File (xlsx). Will take some time depending how large the data is...")
 newDf = pandas.DataFrame(finalData, columns=function_output.get_summary_header_name())

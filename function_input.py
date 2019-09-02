@@ -157,12 +157,6 @@ def get_sheet_name(index):
         return sheetNameList[index]
     return None
 
-def get_header_name():
-    return headerNameList
-
-def is_output_file_available(pathName):
-    return len(function_general.list_file(pathName)) != 0
-
 def process_dataframe(dataframe, year, month, tab, title, unit):
     rowList = []
     for index, row in dataframe.iterrows():
