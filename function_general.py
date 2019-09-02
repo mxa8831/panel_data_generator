@@ -9,3 +9,6 @@ def regex_get_date(filename):
 
 def list_file(pathname):
     return sorted(glob.glob("{}/*.xls*".format(pathname)))
+
+def string_to_int(string):
+    return int(string)
