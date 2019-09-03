@@ -1,5 +1,5 @@
-import function_output
-import pandas
+import function_general
+from function_general import compute_difference as cd
 
 sheetNameList = [
     '表A①－１',
@@ -11,7 +11,7 @@ sheetNameList = [
 ]
 
 class Row(object):
-    def __init__(self, year, month, perfecture, sector, threshold1, threshold2, value, unit, tab, title, difference = 'NA', abnormal = False):
+    def __init__(self, year, month, perfecture, sector, threshold1, threshold2, value, unit, tab, title, difference = 'NA'):
         self._year = year
         self._month = month
         self._perfecture = perfecture
@@ -23,7 +23,7 @@ class Row(object):
         self._tab = tab
         self._title = title
         self._difference = difference
-        self._abnormal = abnormal
+        self._abnormal = True if difference is 'NA' else False
 
 
     def to_summary_list(self):
@@ -157,90 +157,135 @@ def get_sheet_name(index):
         return sheetNameList[index]
     return None
 
-def process_dataframe(dataframe, year, month, tab, title, unit):
+last_month_data = {
+    'year': 2019,
+    'month': 2,
+    '表A①－１': None, # df tab 1
+    '表A①－２': None, # df tab 2
+    '表A②－１': None, # df tab 3
+    '表A②－２': None, # df tab 4
+}
+
+def save_current_month_data(year, month, tab1 = None, tab2 = None, tab3 = None, tab4 = None):
+    global last_month_data
+    last_month_data = {
+        'year': function_general.string_to_int(year),
+        'month': function_general.string_to_int(month),
+        '表A①－１': tab1, # df tab 1
+        '表A①－２': tab2, # df tab 2
+        '表A②－１': tab3, # df tab 3
+        '表A②－２': tab4, # df tab 4
+    }
+
+def get_previous_month_data(currentYear, currentMonth, tab):
+    (monthBeforeYear, monthBeforemonth) = function_general.get_month_before(currentYear, currentMonth)
+    global last_month_data
+    if last_month_data['year'] == function_general.string_to_int(monthBeforeYear) and \
+            last_month_data['month'] == function_general.string_to_int(monthBeforemonth) and \
+            last_month_data[tab] is not None:
+        return last_month_data[tab]
+    return None
+
+def process_dataframe(currentDataframe, currentYear, currentMonth, tab, title, unit):
     rowList = []
-    for index, row in dataframe.iterrows():
-        if tab == get_sheet_name(0):
-            rowList = rowList + process_row_tab_1(index, row, year, month, tab, title, unit)
-        elif tab == get_sheet_name(1):
-            rowList = rowList + process_row_tab_2(index, row, year, month, tab, title, unit)
-        elif tab == get_sheet_name(2):
-            rowList = rowList + process_row_tab_3(index, row, year, month, tab, title, unit)
-        elif tab == get_sheet_name(3):
-            rowList = rowList + process_row_tab_4(index, row, year, month, tab, title, unit)
+    previousDataframe = get_previous_month_data(currentYear, currentMonth, tab)
+
+    if previousDataframe is not None:
+        # Last month's data is there, so we do coupled iteration with zip
+        for (currentDataframeIndex, currentDataframeRow ), (prevoiusDataframeIndex, previousDataframeRow ) \
+                in zip(currentDataframe.iterrows(), previousDataframe.iterrows()):
+            if tab == get_sheet_name(0):
+                rowList = rowList + process_row_tab_1(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit, previousDataframeRow)
+            elif tab == get_sheet_name(1):
+                rowList = rowList + process_row_tab_2(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+            elif tab == get_sheet_name(2):
+                rowList = rowList + process_row_tab_3(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+            elif tab == get_sheet_name(3):
+                rowList = rowList + process_row_tab_4(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+    else:
+        # Last month's data is not there, so we do normal iteration
+        for currentDataframeIndex, currentDataframeRow in currentDataframe.iterrows():
+            if tab == get_sheet_name(0):
+                rowList = rowList + process_row_tab_1(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+            elif tab == get_sheet_name(1):
+                rowList = rowList + process_row_tab_2(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+            elif tab == get_sheet_name(2):
+                rowList = rowList + process_row_tab_3(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+            elif tab == get_sheet_name(3):
+                rowList = rowList + process_row_tab_4(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
 
     return rowList
 
-def process_row_tab_1(index, row, year, month, tab, title, unit):
+def process_row_tab_1(index, currentMonthRow, year, month, tab, title, unit, previousMonthRow = None):
     # print(index, [x for x in row])
     rowList = []
 
     if year == 2019:
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW未満', '', row[1], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW未満', 'うち自家発電設備併設', row[2], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', '', row[3], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち50kW未満', row[4], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち50kW以上500kW未満', row[5], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち500kW以上1,000kW未満', row[6], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち1,000kW以上2,000kW未満', row[7], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち2,000kW以上', row[8], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW未満', '', currentMonthRow[1], unit, tab, title, cd(1, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW未満', 'うち自家発電設備併設', currentMonthRow[2], unit, tab, title, cd(2, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', '', currentMonthRow[3], unit, tab, title, cd(3, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち50kW未満', currentMonthRow[4], unit, tab, title, cd(4, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち50kW以上500kW未満', currentMonthRow[5], unit, tab, title, cd(5, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち500kW以上1,000kW未満', currentMonthRow[6], unit, tab, title, cd(6, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち1,000kW以上2,000kW未満', currentMonthRow[7], unit, tab, title, cd(7, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち2,000kW以上', currentMonthRow[8], unit, tab, title, cd(8, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '風力発電設備', '20kW未満', '', row[9], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '風力発電設備', '20kW以上', '', row[10], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '風力発電設備', '20kW以上', 'うち洋上風力', row[11], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '風力発電設備', '20kW未満', '', currentMonthRow[9], unit, tab, title, cd(9, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '風力発電設備', '20kW以上', '', currentMonthRow[10], unit, tab, title, cd(10, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '風力発電設備', '20kW以上', 'うち洋上風力', currentMonthRow[11], unit, tab, title, cd(11, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW未満', '', row[12], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW未満', 'うち特定水力', row[13], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW以上 1,000kW未満', '', row[14], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW以上 1,000kW未満', 'うち特定水力', row[15], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '1,000kW以上 5,000kW未満', '', row[16], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '1,000kW以上 5,000kW未満', 'うち特定水力', row[17], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '5,000kW以上 30,000kW未満', '', row[18], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '5,000kW以上 30,000kW未満', 'うち特定水力', row[19], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW未満', '', currentMonthRow[12], unit, tab, title, cd(12, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW未満', 'うち特定水力', currentMonthRow[13], unit, tab, title, cd(13, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW以上 1,000kW未満', '', currentMonthRow[14], unit, tab, title, cd(14, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW以上 1,000kW未満', 'うち特定水力', currentMonthRow[15], unit, tab, title, cd(15, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '1,000kW以上 5,000kW未満', '', currentMonthRow[16], unit, tab, title, cd(16, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '1,000kW以上 5,000kW未満', 'うち特定水力', currentMonthRow[17], unit, tab, title, cd(17, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '5,000kW以上 30,000kW未満', '', currentMonthRow[18], unit, tab, title, cd(18, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '5,000kW以上 30,000kW未満', 'うち特定水力', currentMonthRow[19], unit, tab, title, cd(19, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '地熱発電設備', '15,000kW未満', '', row[20], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '地熱発電設備', '15,000kW以上', '', row[21], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '地熱発電設備', '15,000kW未満', '', currentMonthRow[20], unit, tab, title, cd(20, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '地熱発電設備', '15,000kW以上', '', currentMonthRow[21], unit, tab, title, cd(20, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', 'メタン発酵ガス', '', row[22], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '未利用木質', '2,000kW未満', row[23], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '未利用木質', '2,000kW以上', row[24], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '一般木質・農作物残さ', '', row[25], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '建設廃材', '', row[26], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '一般廃棄物・木質以外', '', row[27], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', 'メタン発酵ガス', '', currentMonthRow[22], unit, tab, title, cd(22, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '未利用木質', '2,000kW未満', currentMonthRow[23], unit, tab, title, cd(23, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '未利用木質', '2,000kW以上', currentMonthRow[24], unit, tab, title, cd(24, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '一般木質・農作物残さ', '', currentMonthRow[25], unit, tab, title, cd(25, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '建設廃材', '', currentMonthRow[26], unit, tab, title, cd(26, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '一般廃棄物・木質以外', '', currentMonthRow[27], unit, tab, title, cd(27, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '合計', '', '', row[28], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '合計', '', '', currentMonthRow[28], unit, tab, title, cd(28, currentMonthRow, previousMonthRow)))
 
     else:
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW未満', '', row[1], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW未満', 'うち自家発電設備併設', row[2], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', '', row[3], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち50kW未満', row[4], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち50kW以上500kW未満', row[5], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち500kW以上1,000kW未満', row[6], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち1,000kW以上2,000kW未満', row[7], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '太陽光発電設備', '10kW以上', 'うち2,000kW以上', row[8], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW未満', '', currentMonthRow[1], unit, tab, title, cd(1, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW未満', 'うち自家発電設備併設', currentMonthRow[2], unit, tab, title, cd(2, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', '', currentMonthRow[3], unit, tab, title, cd(3, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち50kW未満', currentMonthRow[4], unit, tab, title, cd(4, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち50kW以上500kW未満', currentMonthRow[5], unit, tab, title, cd(5, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち500kW以上1,000kW未満', currentMonthRow[6], unit, tab, title, cd(6, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち1,000kW以上2,000kW未満', currentMonthRow[7], unit, tab, title, cd(7, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '太陽光発電設備', '10kW以上', 'うち2,000kW以上', currentMonthRow[8], unit, tab, title, cd(8, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '風力発電設備', '20kW未満', '', row[9], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '風力発電設備', '20kW以上', '', row[10], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '風力発電設備', '20kW以上', 'うち洋上風力', row[11], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '風力発電設備', '20kW未満', '', currentMonthRow[9], unit, tab, title, cd(9, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '風力発電設備', '20kW以上', '', currentMonthRow[10], unit, tab, title, cd(10, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '風力発電設備', '20kW以上', 'うち洋上風力', currentMonthRow[11], unit, tab, title, cd(11, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW未満', '', row[12], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW未満', 'うち特定水力', row[13], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW以上 1,000kW未満', '', row[14], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '200kW以上 1,000kW未満', 'うち特定水力', row[15], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '1,000kW以上 5,000kW未満', '', row[16], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '水力発電設備', '1,000kW以上 5,000kW未満', 'うち特定水力', row[17], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW未満', '', currentMonthRow[12], unit, tab, title, cd(12, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW未満', 'うち特定水力', currentMonthRow[13], unit, tab, title, cd(13, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW以上 1,000kW未満', '', currentMonthRow[14], unit, tab, title, cd(14, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '200kW以上 1,000kW未満', 'うち特定水力', currentMonthRow[15], unit, tab, title, cd(15, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '1,000kW以上 5,000kW未満', '', currentMonthRow[16], unit, tab, title, cd(16, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '水力発電設備', '1,000kW以上 5,000kW未満', 'うち特定水力', currentMonthRow[17], unit, tab, title, cd(17, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '地熱発電設備', '15,000kW未満', '', row[18], unit, tab, title))
-        rowList.append(Row(year, month, row[0], '地熱発電設備', '15,000kW以上', '', row[19], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '地熱発電設備', '15,000kW未満', '', currentMonthRow[18], unit, tab, title, cd(18, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], '地熱発電設備', '15,000kW以上', '', currentMonthRow[19], unit, tab, title, cd(19, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', 'メタン発酵ガス', '', row[20], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '未利用木質', '', row[21], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '一般木質・農作物残さ', '', row[22], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '建設廃材', '', row[23], unit, tab, title))
-        rowList.append(Row(year, month, row[0], 'バイオマス発電設備', '一般廃棄物・木質以外', '', row[24], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', 'メタン発酵ガス', '', currentMonthRow[20], unit, tab, title, cd(20, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '未利用木質', '', currentMonthRow[21], unit, tab, title, cd(21, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '一般木質・農作物残さ', '', currentMonthRow[22], unit, tab, title, cd(22, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '建設廃材', '', currentMonthRow[23], unit, tab, title, cd(23, currentMonthRow, previousMonthRow)))
+        rowList.append(Row(year, month, currentMonthRow[0], 'バイオマス発電設備', '一般廃棄物・木質以外', '', currentMonthRow[24], unit, tab, title, cd(24, currentMonthRow, previousMonthRow)))
 
-        rowList.append(Row(year, month, row[0], '合計', '', '', row[25], unit, tab, title))
+        rowList.append(Row(year, month, currentMonthRow[0], '合計', '', '', currentMonthRow[25], unit, tab, title, cd(25, currentMonthRow, previousMonthRow)))
     return  rowList
 
 def process_row_tab_2(index, row, year, month, tab, title, unit):
