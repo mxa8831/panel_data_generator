@@ -20,7 +20,7 @@ def get_month_before(year, month):
         return (year - 1, 12)
     return (year, month - 1)
 
-def compute_difference(currentValue, previousValue):
-    if previousValue is None or previousValue is 'NA':
+def compute_difference(index, currentRow, previousRow):
+    if previousRow is None or previousRow[index] is 'NA':
         return 'NA'
-    return string_to_int(currentValue) - string_to_int(previousValue)
+    return string_to_int(currentRow[index]) - string_to_int(previousRow[index])
