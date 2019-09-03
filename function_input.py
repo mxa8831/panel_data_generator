@@ -192,7 +192,7 @@ def process_dataframe(currentDataframe, currentYear, currentMonth, tab, title, u
 
     if previousDataframe is not None:
         # Last month's data is there, so we do coupled iteration with zip
-        for (currentDataframeIndex, currentDataframeRow ), (prevoiusDataframeIndex, previousDataframeRow ) \
+        for (currentDataframeIndex, currentDataframeRow), (prevoiusDataframeIndex, previousDataframeRow) \
                 in zip(currentDataframe.iterrows(), previousDataframe.iterrows()):
             if tab == get_sheet_name(0):
                 rowList = rowList + process_row_tab_1(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit, previousDataframeRow)
