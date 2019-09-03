@@ -1,0 +1,52 @@
+"/home/rahmat/Upworks/02_Minji An/panel_data_generator/venv/bin/python" "/home/rahmat/Upworks/02_Minji An/panel_data_generator/excel_merger.py"
+Processing input_file/A_pref201404.xls
+Processing input_file/A_pref201405.xls
+	No sheet named <'表A②－１'>
+Processing input_file/A_pref201406.xls
+Processing input_file/A_pref201407.xls
+Processing input_file/A_pref201408.xls
+Processing input_file/A_pref201409.xls
+Processing input_file/A_pref201410.xls
+Processing input_file/A_pref201411.xls
+Processing input_file/A_pref201412.xls
+Processing input_file/A_pref201501.xls
+	No sheet named <'表A②－１'>
+	No sheet named <'表A②－２'>
+Processing input_file/A_pref201502.xls
+Processing input_file/A_pref201503.xls
+Processing input_file/A_pref201504.xls
+Processing input_file/A_pref201505.xls
+Processing input_file/A_pref201506.xls
+Processing input_file/A_pref201507.xls
+Processing input_file/A_pref201508.xls
+Processing input_file/A_pref201509.xls
+Processing input_file/A_pref201510.xls
+Processing input_file/A_pref201511.xls
+Processing input_file/A_pref201512.xls
+Processing input_file/A_pref201601.xls
+Processing input_file/A_pref201602.xls
+Processing input_file/A_pref201603.xls
+Processing input_file/A_pref201604.xls
+Processing input_file/A_pref201605.xls
+Processing input_file/A_pref201606.xls
+Processing input_file/A_pref201607.xls
+Processing input_file/A_pref201608.xls
+Processing input_file/A_pref201609.xls
+Processing input_file/A_pref201610.xls
+Processing input_file/A_pref201611.xls
+Processing input_file/A_pref201612.xls
+Processing input_file/A_pref201701.xls
+Processing input_file/A_pref201702.xls
+Processing input_file/A_pref201703.xls
+Processing input_file/A_pref201709.xls
+	No sheet named <'表A①－２'>
+	No sheet named <'表A②－２'>
+Processing input_file/A_pref201712.xls
+Processing input_file/A_pref201803.xls
+Processing input_file/A_pref201806.xlsx
+Processing input_file/A_pref201809.xlsx
+Processing input_file/A_pref201812.xlsx
+Processing input_file/A_pref201903.xlsx
+Generating Output File (xlsx). Will take some time depending how large the data is...
+
+Process finished with exit code 0
