@@ -20,19 +20,20 @@ for aFile in function_general.list_file("input_file"):
 
     if df1 is not None:
         rowlist1 = function_input.process_dataframe(df1, year, month, function_input.get_sheet_name(0),  title, unit1)
-        if rowlist1 is None:
-            print('rowlist1 is None')
         finalSummaryData += [x.to_summary_list() for x in rowlist1]
         finalNetData += [x.to_net_list() for x in rowlist1]
     if df2 is not None:
         rowlist2 = function_input.process_dataframe(df2, year, month, function_input.get_sheet_name(1), title, unit2)
         finalSummaryData += [x.to_summary_list() for x in rowlist2]
+        finalNetData += [x.to_net_list() for x in rowlist2]
     if df3 is not None:
         rowlist3 = function_input.process_dataframe(df3, year, month, function_input.get_sheet_name(2), title, unit3)
         finalSummaryData += [x.to_summary_list() for x in rowlist3]
+        finalNetData += [x.to_net_list() for x in rowlist3]
     if df4 is not None:
         rowlist4 = function_input.process_dataframe(df4, year, month, function_input.get_sheet_name(3), title, unit4)
         finalSummaryData += [x.to_summary_list() for x in rowlist4]
+        finalNetData += [x.to_net_list() for x in rowlist4]
 
     # set current dataframe to be used next sheet
     function_input.save_current_month_data(year, month, tab1=df1, tab2=df2, tab3=df3, tab4=df4)
