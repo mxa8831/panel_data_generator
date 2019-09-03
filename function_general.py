@@ -14,6 +14,13 @@ def string_to_int(string):
     return int(string)
 
 def get_month_before(year, month):
+    year = string_to_int(year)
+    month = string_to_int(month)
     if month == 1:
         return (year - 1, 12)
     return (year, month - 1)
+
+def compute_difference(currentValue, previousValue):
+    if previousValue is None or previousValue is 'NA':
+        return 'NA'
+    return string_to_int(currentValue) - string_to_int(previousValue)
