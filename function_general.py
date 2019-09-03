@@ -12,3 +12,8 @@ def list_file(pathname):
 
 def string_to_int(string):
     return int(string)
+
+def get_month_before(year, month):
+    if month == 1:
+        return (year - 1, 12)
+    return (year, month - 1)
