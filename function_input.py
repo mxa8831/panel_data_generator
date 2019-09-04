@@ -197,11 +197,11 @@ def process_dataframe(currentDataframe, currentYear, currentMonth, tab, title, u
             if tab == get_sheet_name(0):
                 rowList = rowList + process_row_tab_1(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit, previousDataframeRow)
             elif tab == get_sheet_name(1):
-                rowList = rowList + process_row_tab_2(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+                rowList = rowList + process_row_tab_2(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit, previousDataframeRow)
             elif tab == get_sheet_name(2):
-                rowList = rowList + process_row_tab_3(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+                rowList = rowList + process_row_tab_3(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit, previousDataframeRow)
             elif tab == get_sheet_name(3):
-                rowList = rowList + process_row_tab_4(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit)
+                rowList = rowList + process_row_tab_4(currentDataframeIndex, currentDataframeRow, currentYear, currentMonth, tab, title, unit, previousDataframeRow)
     else:
         # Last month's data is not there, so we do normal iteration
         for currentDataframeIndex, currentDataframeRow in currentDataframe.iterrows():

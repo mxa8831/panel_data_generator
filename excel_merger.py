@@ -38,7 +38,7 @@ for aFile in function_general.list_file("input_file"):
     # set current dataframe to be used next sheet
     function_input.save_current_month_data(year, month, tab1=df1, tab2=df2, tab3=df3, tab4=df4)
 
-print("Generating Output File (xlsx). Will take some time depending how large the data is...")
+print("Generating Output File (xlsx). Will take some time depending on how large the data is...")
 newDf = pandas.DataFrame(finalSummaryData, columns=function_output.get_summary_header_name())
 netDf = pandas.DataFrame(finalNetData, columns=function_output.get_net_header_name())
 
