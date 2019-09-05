@@ -69,7 +69,7 @@
 
 ## Running
 
-### A. Running without merged file given (i.e running it for the first time)
+### A. Running without giving previous merged file (i.e running it for the first time)
 1. Place all your excels into `input_file` folder
     1. The filename can be anything, as long as it contains `A_prefYYYMM`, where `YYYY` is a 4 digit year and `MM` is 2 digit months (with trailing zero).
     The script will identify the pattern with regex and process it according to the year and month
