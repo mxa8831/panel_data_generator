@@ -123,7 +123,7 @@
 
 
 ## Notes
-**Note 1:** It may take some times to generate the excel files, assuming that it will have huge rows. 
+**Note 1:** It may take some times for both appending the data from previous file and generate the excel files, assuming that it will have huge rows. 
 For comparison, I have i7 and 16GB of RAM and generating 15MB worth of excel took me 30-45 seconds.
 
 
