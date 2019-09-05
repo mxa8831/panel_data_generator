@@ -38,14 +38,23 @@ for aFile in function_general.list_file("input_file"):
     # set current dataframe to be used next sheet
     function_input.save_current_month_data(year, month, tab1=df1, tab2=df2, tab3=df3, tab4=df4)
 
-print("Generating Output File (xlsx). Will take some time depending on how large the data is...")
-newDf = pandas.DataFrame(finalSummaryData, columns=function_output.get_summary_header_name())
-netDf = pandas.DataFrame(finalNetData, columns=function_output.get_net_header_name())
 
+# generating dataframe to contains data
+finalSummaryDf = pandas.DataFrame([], columns=function_output.get_summary_header_name())
+finalNetDf = pandas.DataFrame([], columns=function_output.get_net_header_name())
 
+# attemting to restore previous data (if any)
+if function_output.is_output_file_available("output_file", "merged_*"):
+    print("\nPrevious Data found. Attempting to merge: ", end='')
+    finalSummaryDf, finalNetDf = function_output.get_previous_output(finalSummaryDf, finalNetDf)
 
-filename = "output_file/beta_{}.xlsx".format(str(datetime.datetime.now()).replace(":", "."))
+print("\nAppending the dataframe")
+finalSummaryDf = finalSummaryDf.append(pandas.DataFrame(finalSummaryData, columns=function_output.get_summary_header_name()))
+finalNetDf = finalNetDf.append(pandas.DataFrame(finalNetData, columns=function_output.get_net_header_name()))
+
+print("\nGenerating Output File (xlsx). Will take some time depending on how large the data is...")
+filename = "output_file/merged_{}.xlsx".format(str(datetime.datetime.now()).replace(":", "."))
 excelWriter = pandas.ExcelWriter(filename, engine='xlsxwriter')
-newDf.to_excel(excelWriter, index=False, sheet_name="Summary1")
-netDf.to_excel(excelWriter, index=False, sheet_name="net")
+finalSummaryDf.to_excel(excelWriter, index=False, sheet_name="Summary1")
+finalNetDf.to_excel(excelWriter, index=False, sheet_name="net")
 excelWriter.save()
