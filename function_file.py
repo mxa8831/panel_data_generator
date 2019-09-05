@@ -9,7 +9,6 @@ def open_excel(fileName, sheetName):
         print('\t' + str(e))
         return None
 
-
 def open_input_file(filename, sheetName, returnTitle = False):
     dataframe = open_excel(filename,sheetName)
     if dataframe is not None:
@@ -22,7 +21,7 @@ def open_input_file(filename, sheetName, returnTitle = False):
     return (None, None, None) if returnTitle else (None, None)
 
 def open_output_file(filename, sheetName):
-    return open_excel(filename,sheetName)
+    return open_excel(filename, sheetName)
 
 def get_unit(dataframe):
     # （単位：件） or （単位：kW）

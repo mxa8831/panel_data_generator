@@ -1,8 +1,22 @@
 import function_general
 import function_input
 import function_file
+import function_output
 import pandas
 
+
+# obtaining previous data (if any)
+finalSummaryDf = pandas.DataFrame([], columns=function_output.get_summary_header_name())
+finalNetDf = pandas.DataFrame([], columns=function_output.get_net_header_name())
+
+if function_output.is_output_file_available("output_file", "beta_*"):
+    print("Previous Data found. Attempting to merge it")
+    finalSummaryDf, finalNetDf = function_output.get_previous_output(finalSummaryDf, finalNetDf)
+
+    print(finalSummaryDf.head(), finalSummaryDf.shape)
+    print(finalNetDf.head(), finalNetDf.shape)
+
+exit()
 
 
 for aFile in function_general.list_file("input_file"):
