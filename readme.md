@@ -114,7 +114,7 @@
     
     ![](assets/merge_nautilus.png)
     
-    We can see that the first file is 5MB in size. 
+    For example, running with several data, we can see that the first file is 5MB in size. 
     If we rerun the script, we will get around 10MB of file (5MB old data + 5MB newly created input data). 
     The next rerun, it will be around 15MB in size (10MB + 5MB), and so on.
     This is to prove that the data is merged successfully.
