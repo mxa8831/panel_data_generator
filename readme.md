@@ -124,7 +124,6 @@
 
 ## Notes
 **Note 1:** It may take some times for both appending the data from previous file and generate the excel files, assuming that it will have huge rows. 
-For comparison, I have i7 and 16GB of RAM and generating 15MB worth of excel took me 30-45 seconds.
-
+For comparison, I have intel i7 processor - 16GB of RAM and generating 15MB worth of excel took me 30-45 seconds.
 
 **Note 2:** I have done optimizing the code using panda's Dataframe and it run so fast for the data processing, but the time really takes when writing to the excel. So I believe this is as fast as we can go with `xlsxwriter` engine.
