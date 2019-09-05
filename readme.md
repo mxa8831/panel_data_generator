@@ -1,6 +1,8 @@
 # panel_data_generator
 
-Work in progress.
+- **[DONE]** Code
+- **[DONE]** Documentation
+- Testing & Feedback
 
 ## Getting started and Requirements
 1. OS of Windows 7/10, I strongly recommend a 64 bit copy
