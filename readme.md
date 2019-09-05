@@ -23,12 +23,26 @@
     ![](assets/venv_folder.png)
 
 3. Activate/Go into virtual environment
+
+    **For Linux**
+
     ```
     $ source venv/bin/activate
     ```
-    Your cmd/powershell/terminal will prefixed with `(venv)`, means you are in virtual environment. Like so,
     
+    **For Windows**
+    ```
+    $ venv/Scripts/activate.bat
+    ```
+    
+    Reference: [(source)](https://docs.python.org/3/library/venv.html)
+    
+    ![](assets/venv_activate.png)
+    
+    If the process is succeed, your cmd/powershell/terminal will prefixed with `(venv)`, means you are in virtual environment. Like so,
+
     ![](assets/venv.png)
+    
     
 4. Install all the required packages
     ```
