@@ -105,7 +105,7 @@
     
     At first, you will not have `merged_xxx.xlsx`. But after you run it for the first time, it will pop up as the result.
 
-2. Do the step from the **point B**
+2. Do the step from the **point A**
 3. The output console will indicate that it found previous **Output File**
 
     ![](assets/run_console_merge.png)
